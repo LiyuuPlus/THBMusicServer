@@ -1,5 +1,6 @@
 import express from 'express';
-import { getTHBBySongId } from './controllers/netease';
+import { getSongInfo, getSongInfoByTHB } from './controllers/netease';
+import { getTHBInfoByAlbum } from './controllers/thb';
 
 interface callback {
     (request: express.Request, response: express.Response): void;
@@ -13,5 +14,7 @@ type Routes = {
 
 export const routes: Routes = [
     { path: "/", type: "GET", cb: (requst, response) => { response.send("THB音乐API查询服务") } },
-    { path: "/netease/:id", type: "GET", cb: getTHBBySongId },
+    { path: "/netease/:id", type: "GET", cb: getSongInfo },
+    { path: "/netease/thbinfo/:id", type: "GET", cb: getSongInfoByTHB },
+    { path: "/thb/album/:name", type: "GET", cb: getTHBInfoByAlbum },
 ];
