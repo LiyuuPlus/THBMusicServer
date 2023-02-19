@@ -13,7 +13,7 @@ export class ThbAlbums {
   albumName: string;
 
   @Column("varchar", {
-    name: "CircleName",
+    name: "circleName",
     nullable: true,
     comment: "制作社团名称",
     length: 255,
