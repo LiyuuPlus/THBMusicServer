@@ -1,6 +1,6 @@
 import express from 'express';
-import { getSongInfo, getSongInfoByTHB } from './controllers/netease';
-import { getTHBListByAlbum,getTHBInfoByAlbum } from './controllers/thb';
+import { getSongInfo, getSongInfoByTHB } from '../controllers/netease';
+import { getTHBListByAlbum,getTHBInfoByAlbum } from '../controllers/thb';
 
 interface callback {
     (request: express.Request, response: express.Response): void;

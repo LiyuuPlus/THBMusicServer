@@ -1,9 +1,8 @@
-
+import { AppDataSource } from '../config/dataSource'
 import { ThbAlbums } from '../entities/ThbAlbums';
-import { getTHBAlbum, getTHBAlbumSongs, searchTHBAlbum } from '../utils/thb';
-import { createConnection } from 'typeorm';
-import { api_thb_albuminfo } from '../models/api_thb_albuminfo';
 import { ThbSongs } from '../entities/ThbSongs';
+import { getTHBAlbum, getTHBAlbumSongs, searchTHBAlbum } from '../utils/thb';
+import { api_thb_albuminfo } from '../models/api_thb_albuminfo';
 
 /**
  * 根据专辑名称从API搜索专辑结果
@@ -124,10 +123,8 @@ const getAlbumSongByAPI = async (labelName: string) => {
  * @return {*} 
  */
 const getAlbumInfoByDB = async (labelName: string) => {
-    const connection = await createConnection();
-    const repository = connection.getRepository(ThbAlbums);
+    const repository = AppDataSource.getRepository(ThbAlbums);
     let info = await repository.findOne({ where: { label: labelName } });
-    connection.close();
     return info;
 }
 

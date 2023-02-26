@@ -1,4 +1,4 @@
-import { createConnection } from 'typeorm';
+import { AppDataSource } from '../config/dataSource'
 import { VNeteaseSongs } from '../entities/VNeteaseSongs';
 import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
 
@@ -8,10 +8,8 @@ import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
  * @returns 
  */
 const getMusicInfoBySongId = async (songId: number) => {
-    const connection = await createConnection();
-    const repository = connection.getRepository(VNeteaseSongs);
+    const repository = AppDataSource.getRepository(VNeteaseSongs);
     let info = await repository.findOne({ where: { id: songId } });
-    connection.close();
     return info;
 }
 
@@ -21,10 +19,8 @@ const getMusicInfoBySongId = async (songId: number) => {
  * @returns 
  */
 const getTHBInfoBySongId = async (songId: number) => {
-    const connection = await createConnection();
-    const repository = connection.getRepository(VNeteaseThbsonglink);
+    const repository = AppDataSource.getRepository(VNeteaseThbsonglink);
     let info = await repository.findOne({ where: { id: songId } });
-    connection.close();
     return info;
 }
 

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { successResult, errorFoundResult, notFoundResult } from "../apiResult";
+import { successResult, errorFoundResult, notFoundResult } from "../utils/apiResult";
 import { getMusicInfoBySongId, getTHBInfoBySongId } from '../services/netease';
 
 const getSongInfo = async (request: Request, response: Response) => {

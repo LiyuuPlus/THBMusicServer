@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { successResult, errorFoundResult, notFoundResult } from "../apiResult";
+import { successResult, errorFoundResult, notFoundResult } from "../utils/apiResult";
 import { getAlbumInfoByAPI, searchAlbumListByAPI } from '../services/thb';
 
 const getTHBListByAlbum = async (request: Request, response: Response) => {
