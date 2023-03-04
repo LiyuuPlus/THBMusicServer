@@ -28,4 +28,7 @@ export class NeteaseThbsonglink {
     default: () => "CURRENT_TIMESTAMP",
   })
   updateTime: Date | null;
+
+  @Column("int", { name: "isDel", comment: "是否删除" })
+  isDel: number;
 }

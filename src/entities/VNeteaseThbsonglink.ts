@@ -16,7 +16,7 @@ import { ViewEntity, ViewColumn } from "typeorm";
 	v_thb_songs.lyrics AS lyrics,
 	v_thb_songs.lyricsIndex AS lyricsIndex,
 	v_thb_songs.CircleName AS CircleName,
-	v_thb_songs.date AS DATE,
+	v_thb_songs.date AS Date,
 	v_thb_songs.eventName AS eventName,
 	v_thb_songs.number AS number,
 	v_thb_songs.coverUrl AS coverUrl,
@@ -24,15 +24,10 @@ import { ViewEntity, ViewColumn } from "typeorm";
 	v_thb_songs.only AS only,
 	v_thb_songs.updateTime AS updateTime 
 FROM
-	((
-			v_netease_songs
-			JOIN netease_thbsonglink ON ((
-					v_netease_songs.id = netease_thbsonglink.songId 
-				)))
-		JOIN v_thb_songs ON (((
-					netease_thbsonglink.albumLabel = v_thb_songs.albumLabel 
-				) 
-	AND ( netease_thbsonglink.songIndex = v_thb_songs.songIndex ))))
+	v_netease_songs
+	JOIN netease_thbsonglink ON v_netease_songs.id = netease_thbsonglink.songId AND netease_thbsonglink.isDel = 0
+	JOIN v_thb_songs ON netease_thbsonglink.albumLabel = v_thb_songs.albumLabel 
+	AND netease_thbsonglink.songIndex = v_thb_songs.songIndex
     `
 })
 
@@ -78,7 +73,7 @@ export class VNeteaseThbsonglink {
     CircleName: string | null;
 
     @ViewColumn()
-    DATE: Date | null;
+    Date: Date | null;
 
     @ViewColumn()
     eventName: string | null;

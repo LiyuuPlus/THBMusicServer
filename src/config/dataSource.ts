@@ -1,4 +1,15 @@
 import { DataSource } from 'typeorm'
+import { NeteaseAlbumartistlink } from '../entities/NeteaseAlbumartistlink';
+import { NeteaseAlbums } from '../entities/NeteaseAlbums';
+import { NeteaseArtists } from '../entities/NeteaseArtists';
+import { NeteaseSongartistlink } from '../entities/NeteaseSongartistlink';
+import { NeteaseSongs } from '../entities/NeteaseSongs';
+import { NeteaseThbsonglink } from '../entities/NeteaseThbsonglink';
+import { ThbAlbums } from '../entities/ThbAlbums';
+import { ThbSongs } from '../entities/ThbSongs';
+import { VNeteaseSongs } from '../entities/VNeteaseSongs';
+import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
+import { VThbSongs } from '../entities/VThbSongs';
 
 const DB_HOST = process.env.DB_HOST || "";
 const DB_PORT = Number(process.env.DB_PORT) || 3306;
@@ -12,15 +23,20 @@ export const AppDataSource = new DataSource({
     username: DB_USERNAME,
     password: DB_PASSWORD,
     database: DB_DATABASE,
+    timezone: "+08:00",
     synchronize: false,
     logging: false,
     entities: [
-        "./dist/entities/**/*.js"
+        NeteaseAlbumartistlink,
+        NeteaseAlbums,
+        NeteaseArtists,
+        NeteaseSongartistlink,
+        NeteaseSongs,
+        NeteaseThbsonglink,
+        ThbAlbums,
+        ThbSongs,
+        VNeteaseSongs,
+        VNeteaseThbsonglink,
+        VThbSongs,
     ],
-    migrations: [
-        "./dist/migration/**/*.js"
-    ],
-    subscribers: [
-        "./dist/subscriber/**/*.js"
-    ]
 });

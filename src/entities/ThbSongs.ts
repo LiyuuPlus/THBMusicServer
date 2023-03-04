@@ -60,4 +60,14 @@ export class ThbSongs {
     default: () => "CURRENT_TIMESTAMP",
   })
   updateTime: Date | null;
+
+  @Column("int", { name: "isDel", comment: "是否删除" })
+  isDel: number;
+
+  // 额外添加
+  lyricUrl: string | null;
+
+  transLyricUrl: string | null;
+
+  allLyricUrl: string | null;
 }

@@ -2,7 +2,7 @@ import { ViewEntity, ViewColumn } from "typeorm";
 
 @ViewEntity({
     expression: `
-	SELECT
+    SELECT
 	ns.id AS id,
 	ns.songIndex AS songIndex,
 	ns.songName AS songName,
@@ -12,14 +12,9 @@ import { ViewEntity, ViewColumn } from "typeorm";
 	vnsl.artistName AS artistName,
 	ns.updateTime AS updateTime 
 FROM
-	((
-			netease_songs ns
-			JOIN netease_albums na ON ((
-					ns.albumId = na.id 
-				)))
-		JOIN v_netease_songslink vnsl ON ((
-			ns.id = vnsl.songId 
-	)))
+	netease_songs ns
+	JOIN netease_albums na ON ns.albumId = na.id
+	JOIN v_netease_songslink vnsl ON ns.id = vnsl.songId
     `
 })
 

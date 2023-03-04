@@ -2,7 +2,6 @@ import { AppDataSource } from '../config/dataSource'
 import { ThbAlbums } from '../entities/ThbAlbums';
 import { ThbSongs } from '../entities/ThbSongs';
 import { getTHBAlbum, getTHBAlbumSongs, searchTHBAlbum } from '../utils/thb';
-import { api_thb_albuminfo } from '../models/api_thb_albuminfo';
 
 /**
  * 根据专辑名称从API搜索专辑结果
@@ -17,9 +16,8 @@ const searchAlbumListByAPI = async (albumName: string) => {
             album.label = info.self.fulltext;
             album.albumName = info.alname.join();
             let circleName = info.circlename.join("/");
-            if(!circleName)
-            {
-                circleName = info.circle.map((c:any)=>{
+            if (!circleName) {
+                circleName = info.circle.map((c: any) => {
                     return c.displaytitle || c.fulltext;
                 }).join("/");
             }
@@ -46,7 +44,6 @@ const searchAlbumListByAPI = async (albumName: string) => {
  * @return {*} 
  */
 const getAlbumInfoByAPI = async (labelName: string) => {
-    let ret = new api_thb_albuminfo();
     const res = await getTHBAlbum(labelName);
     if (res.length > 0) {
         let info = res[0];
@@ -54,9 +51,8 @@ const getAlbumInfoByAPI = async (labelName: string) => {
         album.label = info.self.fulltext;
         album.albumName = info.alname.join();
         let circleName = info.circlename.join("/");
-        if(!circleName)
-        {
-            circleName = info.circle.map((c:any)=>{
+        if (!circleName) {
+            circleName = info.circle.map((c: any) => {
                 return c.displaytitle || c.fulltext;
             }).join("/");
         }
@@ -68,52 +64,10 @@ const getAlbumInfoByAPI = async (labelName: string) => {
         album.coverUrl = info.cover.map((v: any) => v.fullurl).join();
         album.coverChar = info.coverchar.map((v: any) => v.fulltext).join(",");
         album.only = info.only.join(",");
-        let songList = await getAlbumSongByAPI(labelName);
-        ret.albumInfo = album;
-        ret.songList = songList;
-        return ret;
+        return album;
     }
     else {
         return null;
-    }
-}
-
-/**
- * 根据词条名称从API获得专辑下的曲目结果
- * @param {string} labelName 专辑词条名称
- * @return {*} 
- */
-const getAlbumSongByAPI = async (labelName: string) => {
-    let ret = new api_thb_albuminfo();
-    const res = await getTHBAlbumSongs(labelName);
-    if (res.length > 0) {
-        let list: ThbSongs[] = res.map((info: any) => {
-            let song = new ThbSongs();
-            song.albumLabel = info.album[0].fulltext;
-            let songInfo = info.self.fulltext;
-            let songIndex = Number(songInfo.replace(song.albumLabel + "#",""));
-            song.songIndex = songIndex;
-            song.songName = info.name.join();
-            song.discNo =  Number(info.discno.join());
-            song.trackNo = Number(info.trackno.join());
-            let ogmusicCNName = info.ogmusiccnname.join("/");
-            if(!ogmusicCNName)
-            {
-                ogmusicCNName = info.ogmusic.map((o:any)=>{
-                    return o.displaytitle || o.fulltext;
-                }).join("/");
-            }
-            song.ogMusicCnName = ogmusicCNName;
-            song.ogMusicName = info.ogmusicname.join("/");
-            return song;
-        });
-        list.sort((a,b)=>{
-            return a.songIndex - b.songIndex;
-        })
-        return list;
-    }
-    else {
-        return [];
     }
 }
 
@@ -124,12 +78,174 @@ const getAlbumSongByAPI = async (labelName: string) => {
  */
 const getAlbumInfoByDB = async (labelName: string) => {
     const repository = AppDataSource.getRepository(ThbAlbums);
-    let info = await repository.findOne({ where: { label: labelName } });
+    let info = await repository.findOne({ where: { label: labelName, isDel: 0 } });
     return info;
 }
 
+/**
+ * 根据词条名称获得专辑精确结果
+ * @param {string} labelName 专辑词条名称
+ * @return {*} 
+ */
+const getAlbumInfo = async (labelName: string, isUpdate: boolean = false) => {
+    //先从数据库获取，数据库没有再去API拉
+    let info = await getAlbumInfoByDB(labelName);
+    if (isUpdate || !info) {
+        let newInfo = await getAlbumInfoByAPI(labelName);
+        if (newInfo) {
+            if (!info) {
+                info = newInfo;
+            }
+            else {
+                info.albumName = newInfo.albumName;
+                info.circleName = newInfo.circleName;
+                info.date = newInfo.date;
+                info.eventName = newInfo.eventName;
+                info.number = newInfo.number;
+                info.coverUrl = newInfo.coverUrl;
+                info.coverChar = newInfo.coverChar;
+                info.only = newInfo.only;
+                info.updateTime = new Date();
+            }
+            //这里保存已有的新列表
+            const repository = AppDataSource.getRepository(ThbAlbums);
+            await repository.save(info);
+        }
+    }
+    if (info) {
+        //指定字段不返回
+        Reflect.deleteProperty(info, "id");
+        Reflect.deleteProperty(info, "isDel");
+    }
+    return info;
+}
+
+/**
+ * 根据词条名称从API获得专辑下的曲目结果
+ * @param {string} labelName 专辑词条名称
+ * @return {*} 
+ */
+const getAlbumSongsByAPI = async (labelName: string) => {
+    const res = await getTHBAlbumSongs(labelName);
+    if (res.length > 0) {
+        let list: ThbSongs[] = res.map((info: any) => {
+            let song = new ThbSongs();
+            song.albumLabel = info.album[0].fulltext;
+            let songInfo = info.self.fulltext;
+            let songIndex = Number(songInfo.replace(song.albumLabel + "#", ""));
+            song.songIndex = songIndex;
+            song.songName = info.name.join();
+            song.discNo = Number(info.discno.join());
+            song.trackNo = Number(info.trackno.join());
+            let ogmusicCNName = info.ogmusiccnname.join("/");
+            if (!ogmusicCNName) {
+                ogmusicCNName = info.ogmusic.map((o: any) => {
+                    return o.displaytitle || o.fulltext;
+                }).join("/");
+            }
+            song.ogMusicCnName = ogmusicCNName;
+            song.ogMusicName = info.ogmusicname.join("/");
+            let lyrics = info.lyrics[0];
+            if (lyrics) {
+                lyrics = lyrics.exists ? lyrics.fulltext : "";
+            }
+            song.lyrics = lyrics;
+            if (lyrics) {
+                song.lyricsIndex = 1;
+            }
+            return song;
+        });
+        list.sort((a, b) => {
+            return a.songIndex - b.songIndex;
+        })
+        return list;
+    }
+    else {
+        return [];
+    }
+}
+
+/**
+ * 根据词条名称从数据库获得专辑下的曲目结果
+ * @param {string} labelName 专辑词条名称
+ * @return {*} 
+ */
+const getAlbumSongsByDB = async (labelName: string) => {
+    const repository = AppDataSource.getRepository(ThbSongs);
+    let list = await repository.find({ where: { albumLabel: labelName, isDel: 0 } });
+    list.sort((a, b) => {
+        return a.songIndex - b.songIndex;
+    })
+    return list;
+}
+
+/**
+ * 根据词条名称获得专辑下的曲目结果
+ * @param {string} labelName 专辑词条名称
+ * @return {*} 
+ */
+const getAlbumSongs = async (labelName: string, isUpdate: boolean = false) => {
+    //先从数据库取，没有再去API拉取
+    let list = await getAlbumSongsByDB(labelName);
+    if (isUpdate || list.length <= 0) {
+        let newList = await getAlbumSongsByAPI(labelName);
+        if (list.length <= 0) {
+            list = newList;
+        }
+        else {
+            list = list.map(v => {
+                let items = newList.filter(v1 => v.songName == v1.songName);
+                //更新字段
+                if (items.length > 0) {
+                    let item = items[0];
+                    v.songIndex = item.songIndex;
+                    v.discNo = item.discNo;
+                    v.trackNo = item.trackNo;
+                    v.ogMusicName = item.ogMusicName;
+                    v.ogMusicCnName = item.ogMusicCnName;
+                    if (v.lyrics != item.lyrics) {
+                        v.lyrics = item.lyrics;
+                        v.lyricsIndex = 1;
+                    }
+                    v.updateTime = new Date();
+                }
+                else {
+                    //标记删除
+                    v.isDel = 1;
+                }
+                return v;
+            });
+            //抽取出新增的，并加入更新实体集
+            let oldListName = list.filter(v => v.isDel == 0).map(v => v.songName);
+            let addList = newList.filter(v => !oldListName.includes(v.songName));
+            list.push(...addList);
+        }
+        //这里保存已有的新列表
+        const repository = AppDataSource.getRepository(ThbSongs);
+        await repository.save(list);
+    }
+    for (var i = 0; i < list.length; i++) {
+        let item = list[i];
+        //指定字段不返回
+        Reflect.deleteProperty(item, "id");
+        Reflect.deleteProperty(item, "albumLabel");
+        Reflect.deleteProperty(item, "isDel");
+        //处理指定字段内容
+        let lyricUrl = "", transLyricUrl = "", allLyricUrl = "";
+        if (item.lyrics) {
+            lyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.lrc`);
+            transLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.zh.lrc`);
+            allLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.all.lrc`);
+        }
+        item.lyricUrl = lyricUrl;
+        item.transLyricUrl = transLyricUrl;
+        item.allLyricUrl = allLyricUrl;
+    }
+    return list;
+}
+
 export {
-    searchAlbumListByAPI, 
-    getAlbumInfoByAPI,
-    getAlbumInfoByDB,
+    searchAlbumListByAPI,
+    getAlbumInfo,
+    getAlbumSongs
 }
