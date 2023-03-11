@@ -20,7 +20,7 @@ RedisSource.on('error', (err: any) => {
 DBSource.initialize().then(() => {
   console.log("数据库初始化完成");
   // 数据库初始化完成后再启动WEB服务
-  let port = 3000; // 填写端口号
+  let port = Number(process.env.TMS_PORT) || 3000; // 填写端口号
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: true }));
