@@ -2,24 +2,14 @@ import { Column, Entity } from "typeorm";
 
 @Entity("netease_thbsonglink", { schema: "thbmusic" })
 export class NeteaseThbsonglink {
-  @Column("int", { primary: true, name: "songId", comment: "网易云Id" })
+  @Column("int", { primary: true, name: "songId", comment: "网易云曲目Id" })
   songId: number;
 
-  @Column("varchar", {
-    name: "albumLabel",
-    nullable: true,
-    comment: "THB专辑词条名",
-    length: 255,
+  @Column("int", {
+    name: "thbSongId",
+    comment: "THB曲目记录Id",
   })
-  albumLabel: string | null;
-
-  @Column("varchar", {
-    name: "songIndex",
-    nullable: true,
-    comment: "曲目Id",
-    length: 255,
-  })
-  songIndex: string | null;
+  songIndex: number | null;
 
   @Column("datetime", {
     name: "updateTime",

@@ -39,7 +39,7 @@ Date.prototype.toJSON = function () { return dateFormat(this, 'yyyy-MM-dd hh:mm:
 
 const successResult = (msg: string | null, data?: any | null) => {
     let res: ApiResult = {
-        code: 0,
+        code: 200,
         msg: msg,
         data: data
     };

@@ -1,6 +1,7 @@
 import express from 'express';
-import { getSongInfo, getSongInfoByTHB } from '../controllers/netease';
-import { getTHBListByAlbum,getTHBInfoByAlbum } from '../controllers/thb';
+import * as TestController from '../controllers/test'
+import * as NeteaseController from '../controllers/netease';
+import * as THBController from '../controllers/thb';
 
 interface callback {
     (request: express.Request, response: express.Response): void;
@@ -12,10 +13,25 @@ type Routes = {
     cb: callback;
 }[];
 
+const testRoutes: Routes = [
+    { path: "/test/test", type: "GET", cb: TestController.test },
+    { path: "/test/test1", type: "GET", cb: TestController.test1 },
+];
+
+const neteaseRoutes: Routes = [
+    { path: "/netease/detail/:id", type: "GET", cb: NeteaseController.getSongInfo },
+    { path: "/netease/detail/:id/thb", type: "GET", cb: NeteaseController.getSongInfoByTHB },
+    { path: "/netease/detail/:id/thblyric", type: "GET", cb: NeteaseController.getLyricInfoByTHB },
+];
+
+const THBRoutes: Routes = [
+    { path: "/thb/search/album/:name", type: "GET", cb: THBController.searchAlbumList },
+    { path: "/thb/detail/album/:label", type: "GET", cb: THBController.getAlbumInfo },
+];
+
 export const routes: Routes = [
-    { path: "/", type: "GET", cb: (requst, response) => { response.send("THB音乐API查询服务") } },
-    { path: "/netease/:id", type: "GET", cb: getSongInfo },
-    { path: "/netease/thbinfo/:id", type: "GET", cb: getSongInfoByTHB },
-    { path: "/thb/album/:name", type: "GET", cb: getTHBListByAlbum },
-    { path: "/thb/album/detail/:label", type: "GET", cb: getTHBInfoByAlbum },
+    { path: "/", type: "GET", cb: (requst, response) => { response.send("东方音乐信息查询服务") } },
+    ...testRoutes,
+    ...neteaseRoutes,
+    ...THBRoutes
 ];

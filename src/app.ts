@@ -3,11 +3,21 @@ import "reflect-metadata";
 import "module-alias/register";
 import express from 'express';
 import bodyParser from 'body-parser';
-import { AppDataSource } from './config/dataSource'
+import { DBSource, RedisSource } from './config/dataSource'
 import router from './router/router';
 
+RedisSource.connect();
+//监听Redis连接
+RedisSource.on('connect', () => {
+  console.log("Redis已连接");
+});
+//监听Redis错误
+RedisSource.on('error', (err: any) => {
+  console.log(err)
+});
+
 //初始化数据库
-AppDataSource.initialize().then(() => {
+DBSource.initialize().then(() => {
   console.log("数据库初始化完成");
   // 数据库初始化完成后再启动WEB服务
   let port = 3000; // 填写端口号

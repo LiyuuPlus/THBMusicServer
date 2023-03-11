@@ -4,6 +4,7 @@ import { ViewEntity, ViewColumn } from "typeorm";
     expression: `
     SELECT
 	concat( ts.albumLabel, '#', ts.songIndex ) AS id,
+    ts.id AS oId,
 	ts.albumLabel AS albumLabel,
 	ts.songIndex AS songIndex,
 	ta.albumName AS albumName,
@@ -35,6 +36,9 @@ export class VThbSongs {
 
     @ViewColumn()
     id: string;
+
+    @ViewColumn()
+    oId: number | null;
 
     @ViewColumn()
     albumLabel: string | null;
