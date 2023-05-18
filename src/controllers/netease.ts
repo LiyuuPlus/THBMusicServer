@@ -43,7 +43,7 @@ export const getLyricInfoByTHB = async (request: Request, response: Response) =>
         if (info) {
             let lyric = "", transLyric = "";
             if (info.lyrics) {
-                let lyricUrl = encodeURI(`https://lyrics.thwiki.cc/${info.lyrics.replace("歌词:", "")}.${info.lyricsIndex}.lrc`);
+                let lyricUrl = encodeURI(`https://lyrics.thwiki.cc/${info.lyrics.replace("歌词:", "")}.${info.lyricsIndex}.ja.lrc`);
                 let transLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${info.lyrics.replace("歌词:", "")}.${info.lyricsIndex}.zh.lrc`);
                 let allLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${info.lyrics.replace("歌词:", "")}.${info.lyricsIndex}.all.lrc`);
                 lyric = await got.get(lyricUrl).text() + "[999:999:999]歌词来自于THBWiki";

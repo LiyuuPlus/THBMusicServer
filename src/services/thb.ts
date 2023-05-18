@@ -246,7 +246,7 @@ export const getAlbumSongs = async (labelName: string, isUpdate: boolean = false
             //处理指定字段内容
             let lyricUrl = "", transLyricUrl = "", allLyricUrl = "";
             if (item.lyrics) {
-                lyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.lrc`);
+                lyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.ja.lrc`);
                 transLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.zh.lrc`);
                 allLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.all.lrc`);
             }
