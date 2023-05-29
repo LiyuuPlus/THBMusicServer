@@ -15,13 +15,13 @@ type Routes = {
 
 const testRoutes: Routes = [
     { path: "/test/test", type: "GET", cb: TestController.test },
-    { path: "/test/test1", type: "GET", cb: TestController.test1 },
+    // { path: "/test/test1", type: "GET", cb: TestController.test1 },
 ];
 
 const neteaseRoutes: Routes = [
     { path: "/netease/detail/:id", type: "GET", cb: NeteaseController.getSongInfo },
     { path: "/netease/detail/:id/thb", type: "GET", cb: NeteaseController.getSongInfoByTHB },
-    { path: "/netease/detail/:id/thblyric", type: "GET", cb: NeteaseController.getLyricInfoByTHB },
+    { path: "/netease/detail/:id/thb/lyric", type: "GET", cb: NeteaseController.getLyricInfoByTHB },
 ];
 
 const THBRoutes: Routes = [

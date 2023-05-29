@@ -1,8 +1,9 @@
-import { DBSource } from '../config/dataSource'
+import { DBSource } from '../config/dataSource';
 import { ThbAlbums } from '../entities/ThbAlbums';
 import { ThbSongs } from '../entities/ThbSongs';
 import * as THBAPI from '../utils/provider/thb';
 import * as RedisHelper from '../utils/redisHelper';
+import * as Tools from '../utils/tools';
 
 /** API */
 
@@ -182,11 +183,11 @@ export const getAlbumInfo = async (labelName: string, isUpdate: boolean = false)
         }
         if (info) {
             //指定字段不返回
-            Reflect.deleteProperty(info, "id");
+            // Reflect.deleteProperty(info, "id");
             Reflect.deleteProperty(info, "isDel");
         }
         return info;
-    }, undefined,isUpdate);
+    }, undefined, isUpdate);
     return newInfo;
 }
 
@@ -240,15 +241,16 @@ export const getAlbumSongs = async (labelName: string, isUpdate: boolean = false
         for (var i = 0; i < list.length; i++) {
             let item = list[i];
             //指定字段不返回
-            Reflect.deleteProperty(item, "id");
-            Reflect.deleteProperty(item, "albumLabel");
+            // Reflect.deleteProperty(item, "id");
+            // Reflect.deleteProperty(item, "albumLabel");
             Reflect.deleteProperty(item, "isDel");
             //处理指定字段内容
             let lyricUrl = "", transLyricUrl = "", allLyricUrl = "";
             if (item.lyrics) {
-                lyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.ja.lrc`);
-                transLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.zh.lrc`);
-                allLyricUrl = encodeURI(`https://lyrics.thwiki.cc/${item.lyrics.replace("歌词:", "")}.${item.lyricsIndex}.all.lrc`);
+                const lyricObj = Tools.generateLyricUrl(item.lyrics, item.lyricsIndex);
+                lyricUrl = lyricObj.lyricUrl;
+                transLyricUrl = lyricObj.transLyricUrl;
+                allLyricUrl = lyricObj.allLyricUrl;
             }
             item.lyricUrl = lyricUrl;
             item.transLyricUrl = transLyricUrl;

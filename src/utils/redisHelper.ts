@@ -36,7 +36,10 @@ export const getAsync = async<T>(key: string, fetcher: () => Promise<T>, ttl: nu
                 return resolve(JSON.parse(res));
             }
             const result = await fetcher();
-            set(key, result, ttl);
+            if(result)
+            {
+                set(key, result, ttl);
+            }
             return resolve(result);
         }).catch(err => {
             console.log(err);
