@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { successResult, errorFoundResult, notFoundResult } from "../utils/apiResult";
+import { successResult, errorResult, notFoundResult } from "../utils/apiResult";
 import * as THBServices from '../services/thb';
 import { api_thb_albuminfo } from '../models/api_thb_albuminfo';
 

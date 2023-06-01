@@ -9,7 +9,7 @@ export class NeteaseThbsonglink {
     name: "thbSongId",
     comment: "THB曲目记录Id",
   })
-  songIndex: number | null;
+  thbSongId: number | null;
 
   @Column("datetime", {
     name: "updateTime",
@@ -19,6 +19,6 @@ export class NeteaseThbsonglink {
   })
   updateTime: Date | null;
 
-  @Column("int", { name: "isDel", comment: "是否删除" })
+  @Column("int", { name: "isDel", comment: "是否删除"})
   isDel: number;
 }

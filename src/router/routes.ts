@@ -13,10 +13,11 @@ type Routes = {
     cb: callback;
 }[];
 
-const testRoutes: Routes = [
-    { path: "/test/test", type: "GET", cb: TestController.test },
-    // { path: "/test/test1", type: "GET", cb: TestController.test1 },
-];
+let testRoutes: Routes = [];
+if (process.env.NODE_ENV == "development") {
+    testRoutes.push({ path: "/test/test", type: "GET", cb: TestController.test });
+    testRoutes.push({ path: "/test/test1", type: "GET", cb: TestController.test1 });
+}
 
 const neteaseRoutes: Routes = [
     { path: "/netease/detail/:id", type: "GET", cb: NeteaseController.getSongInfo },

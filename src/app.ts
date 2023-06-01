@@ -13,6 +13,7 @@ RedisSource.on('connect', () => {
 });
 //监听Redis错误
 RedisSource.on('error', (err: any) => {
+  console.log("Redis发生错误：")
   console.log(err)
 });
 
@@ -30,5 +31,6 @@ DBSource.initialize().then(() => {
     console.log(`程序启动，端口：${port}`);
   });
 }).catch((error) => {
+  console.log("数据库发生错误：")
   console.log(error);
 })

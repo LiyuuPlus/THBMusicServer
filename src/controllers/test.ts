@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ThbAlbums } from '../entities/ThbAlbums';
 import { ThbSongs } from '../entities/ThbSongs';
 import { getAlbumInfoByAPI, getAlbumSongsByAPI } from '../services/thb';
-import { successResult, errorFoundResult, notFoundResult } from "../utils/apiResult";
+import { successResult, errorResult, notFoundResult } from "../utils/apiResult";
 import * as NCMServices from '../services/netease';
 import * as RedisHelper from '../utils/redisHelper';
 import * as NeteaseAPI from '../utils/provider/netease';
@@ -17,7 +17,7 @@ export const test = async (request: Request, response: Response) => {
     });
     testArr.push({
         songId: 114515,
-        albumLabel: "缀",
+        albumLabel: "綴（同人专辑）",
         songIndex: 1
     });
     testArr.push({
@@ -27,14 +27,35 @@ export const test = async (request: Request, response: Response) => {
     });
     testArr.push({
         songId: 114517,
-        albumLabel: "缀",
+        albumLabel: "綴（同人专辑）",
         songIndex: 2
     });
-    let res = NCMServices.linkSongToTHB(testArr);
+    let res = await NCMServices.linkSongToTHB(testArr);
     response.json(successResult("执行成功", res));
 }
 
 export const test1 = async (request: Request, response: Response) => {
-    let res = await NeteaseAPI.searchSong("ヒカリ 綴");
-    response.json(successResult("查询成功", res));
+    let testArr: api_netease_link[] = [];
+    testArr.push({
+        songId: 114514,
+        albumLabel: null,
+        songIndex: null
+    });
+    testArr.push({
+        songId: 114515,
+        albumLabel: null,
+        songIndex: null
+    });
+    testArr.push({
+        songId: 114516,
+        albumLabel: null,
+        songIndex: null
+    });
+    testArr.push({
+        songId: 114517,
+        albumLabel: null,
+        songIndex: null
+    });
+    let res = await NCMServices.unlinkSongToTHB(testArr);
+    response.json(successResult("执行成功", res));
 }

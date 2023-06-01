@@ -13,7 +13,7 @@ import { ViewEntity, ViewColumn } from "typeorm";
 	v_thb_songs.ogMusicCnName AS ogMusicCnName,
 	v_thb_songs.lyrics AS lyrics,
 	v_thb_songs.lyricsIndex AS lyricsIndex,
-	v_thb_songs.circleName AS CircleName,
+	v_thb_songs.circleName AS circleName,
 	v_thb_songs.DATE AS DATE,
 	v_thb_songs.eventName AS eventName,
 	v_thb_songs.number AS number,
@@ -61,10 +61,10 @@ export class VNeteaseThbsonglink {
     lyricsIndex: number | null;
 
     @ViewColumn()
-    CircleName: string | null;
+    circleName: string | null;
 
     @ViewColumn()
-    Date: Date | null;
+    date: Date | null;
 
     @ViewColumn()
     eventName: string | null;

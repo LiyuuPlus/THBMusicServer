@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { successResult, errorFoundResult, notFoundResult } from "../utils/apiResult";
+import { successResult, paramErrorResult, notFoundResult } from "../utils/apiResult";
 import * as NCMServices from '../services/netease';
 import * as Tools from '../utils/tools';
 import got from "got";
@@ -21,7 +21,7 @@ export const getSongInfo = async (request: Request, response: Response) => {
         }
     }
     else {
-        response.send(errorFoundResult("参数格式不正确"));
+        response.send(paramErrorResult("参数格式不正确"));
     }
 }
 
@@ -43,7 +43,7 @@ export const getSongInfoByTHB = async (request: Request, response: Response) => 
         }
     }
     else {
-        response.send(errorFoundResult("参数格式不正确"));
+        response.send(paramErrorResult("参数格式不正确"));
     }
 }
 
@@ -69,6 +69,6 @@ export const getLyricInfoByTHB = async (request: Request, response: Response) =>
         }
     }
     else {
-        response.send(errorFoundResult("参数格式不正确"));
+        response.send(paramErrorResult("参数格式不正确"));
     }
 }

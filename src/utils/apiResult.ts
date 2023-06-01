@@ -1,3 +1,4 @@
+import { API_STATUS } from "./define"
 type ApiResult = {
     code: number,
     msg: string | null,
@@ -39,16 +40,25 @@ Date.prototype.toJSON = function () { return dateFormat(this, 'yyyy-MM-dd hh:mm:
 
 const successResult = (msg: string | null, data?: any | null) => {
     let res: ApiResult = {
-        code: 200,
+        code: API_STATUS.SUCCESS,
         msg: msg,
         data: data
     };
     return res;
 }
 
-const errorFoundResult = (msg: string | null) => {
+const errorResult = (msg: string | null) => {
     let res: ApiResult = {
-        code: 400,
+        code: API_STATUS.FAILED,
+        msg: msg,
+        data: null
+    };
+    return res;
+}
+
+const paramErrorResult = (msg: string | null) => {
+    let res: ApiResult = {
+        code: API_STATUS.PARAMERROR,
         msg: msg,
         data: null
     };
@@ -57,7 +67,7 @@ const errorFoundResult = (msg: string | null) => {
 
 const notFoundResult = (msg: string | null) => {
     let res: ApiResult = {
-        code: 404,
+        code: API_STATUS.NOTFOUND,
         msg: msg,
         data: null
     };
@@ -65,7 +75,8 @@ const notFoundResult = (msg: string | null) => {
 }
 
 export {
-    errorFoundResult,
+    paramErrorResult,
+    errorResult,
     successResult,
     notFoundResult
 }
