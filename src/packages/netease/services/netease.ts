@@ -1,12 +1,12 @@
-import { DBSource } from '../config/dataSource';
+import { DBSource } from '../../../config/dataSource';
 import { In } from 'typeorm';
-import { VNeteaseThbsonglink } from '../entities/netease/VNeteaseThbsonglink';
-import { NeteaseThbsonglink } from '../entities/netease/NeteaseThbsonglink';
-import { getAlbumInfo, getAlbumSongs } from './thb';
+import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
+import { NeteaseThbsonglink } from '../entities/NeteaseThbsonglink';
 import { api_netease_link } from '../models/api_netease_link';
-import * as NCMAPI from '../utils/provider/netease';
-import * as RedisHelper from '../utils/redisHelper';
-import * as Tools from '../utils/tools';
+import * as NCMAPI from '../provider/netease';
+import { getAlbumInfo, getAlbumSongs } from '../../thb/services/thb';
+import * as RedisHelper from '../../../utils/redisHelper';
+import * as Tools from '../../../utils/tools';
 import { groupBy, uniqBy } from 'lodash';
 
 /**
@@ -113,7 +113,7 @@ export const unlinkSongToTHB = async (songs: api_netease_link[]) => {
     const repository = DBSource.getRepository(NeteaseThbsonglink);
     songIds = uniqBy(songIds, v => v);
     let linkList = await repository.find({ where: [{ songId: In(songIds), isDel: 0 }] });
-    linkList = linkList.map(v=>{
+    linkList = linkList.map(v => {
         v.isDel = 1;
         v.updateTime = new Date();
         return v;

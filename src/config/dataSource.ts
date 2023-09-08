@@ -1,20 +1,22 @@
-import { DataSource } from 'typeorm';
+import { DataSource, EntitySchema, MixedList } from 'typeorm';
 import * as redis from 'redis';
-
-//thb
-import { ThbAlbums } from '../entities/thb/ThbAlbums';
-import { ThbSongs } from '../entities/thb/ThbSongs';
-import { VThbSongs } from '../entities/thb/VThbSongs';
-
-//netease
-import { NeteaseThbsonglink } from '../entities/netease/NeteaseThbsonglink';
-import { VNeteaseThbsonglink } from '../entities/netease/VNeteaseThbsonglink';
+import { appPackages } from '../core'
 
 const DB_HOST = process.env.DB_HOST || "";
 const DB_PORT = Number(process.env.DB_PORT) || 3306;
 const DB_USERNAME = process.env.DB_USERNAME || "";
 const DB_PASSWORD = process.env.DB_PASSWORD || "";
 const DB_DATABASE = process.env.DB_DATABASE || "";
+
+const entities: MixedList<string | Function | EntitySchema<any>> = [];
+const loadEntity = (entity: string[]) => {
+    for (const tmp of entity) {
+        entities.push(tmp)
+    }
+}
+for (const appPack of appPackages) {
+    loadEntity(appPack.entities);
+}
 export const DBSource = new DataSource({
     type: "mysql",
     host: DB_HOST,
@@ -25,23 +27,17 @@ export const DBSource = new DataSource({
     timezone: "+08:00",
     synchronize: false,
     logging: false,
-    entities: [
-        ThbAlbums,
-        ThbSongs,
-        VThbSongs,
-        NeteaseThbsonglink,
-        VNeteaseThbsonglink,
-    ],
+    entities: entities,
 });
 
 const REDIS_HOST = process.env.REDIS_HOST || "";
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 const REDIS_DB = Number(process.env.REDIS_DB) || 1;
 export const RedisSource = redis.createClient({
-    socket:{
-        host:REDIS_HOST,
-        port:REDIS_PORT,
-        
+    socket: {
+        host: REDIS_HOST,
+        port: REDIS_PORT,
+
     },
-    database:REDIS_DB
+    database: REDIS_DB
 });

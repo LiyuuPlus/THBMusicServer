@@ -30,13 +30,16 @@ const getAllPackages = () => {
 const loadPackage = (packageName: string, packagePath: string): appPackage | null => {
     let pack: appPackage | null = null;
     try {
-        let controllerFile = path.join(packagePath, "controller");
-        let entitiesFiles = loadDirFile(path.join(packagePath, "entities"));
-        let servicesFiles = loadDirFile(path.join(packagePath, "services"));
-        let providerFiles = loadDirFile(path.join(packagePath, "provider"));
+        const controllerPath = path.join(packagePath, "controller");
+        const entitiesPath = path.join(packagePath, "entities");
+        const servicesPath = path.join(packagePath, "services");
+        const providerPath = path.join(packagePath, "provider");
+        let entitiesFiles = loadDirFile(entitiesPath).map(v => path.join(entitiesPath, v));
+        let servicesFiles = loadDirFile(servicesPath).map(v => path.join(servicesPath, v));
+        let providerFiles = loadDirFile(providerPath).map(v => path.join(providerPath, v));
         pack = {
             root: packageName,
-            controller: controllerFile,
+            controller: controllerPath,
             entities: entitiesFiles,
             services: servicesFiles,
             provider: providerFiles
@@ -50,18 +53,21 @@ const loadPackage = (packageName: string, packagePath: string): appPackage | nul
 
 const loadDirFile = (pathName: string) => {
     let files: string[] = [];
-    try{
+    try {
         files = fs.readdirSync(pathName, "utf-8");
     }
-    catch{
+    catch {
         files = [];
     }
     return files;
 }
 
 getAllPackages();
-console.log(tmpPackages)
 
 export const appPackages: appPackage[] = [
     ...tmpPackages
 ]
+
+export const getPackage = (packageName: string): appPackage | undefined => {
+    return appPackages.find(o => o.root == packageName);
+}

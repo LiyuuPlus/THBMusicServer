@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { Routes } from "../../router/routes"
 import { successResult} from "../../utils/apiResult";
-import * as NCMServices from '../../services/netease';
-import { api_netease_link } from '../../models/api_netease_link';
+import * as NCMServices from '../netease/services/netease';
+import { api_netease_link } from '../netease/models/api_netease_link';
 
 const ControllerName = "test";
 export const initRoutes = (): Routes => {
