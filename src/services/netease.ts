@@ -1,7 +1,7 @@
 import { DBSource } from '../config/dataSource';
 import { In } from 'typeorm';
-import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
-import { NeteaseThbsonglink } from '../entities/NeteaseThbsonglink';
+import { VNeteaseThbsonglink } from '../entities/netease/VNeteaseThbsonglink';
+import { NeteaseThbsonglink } from '../entities/netease/NeteaseThbsonglink';
 import { getAlbumInfo, getAlbumSongs } from './thb';
 import { api_netease_link } from '../models/api_netease_link';
 import * as NCMAPI from '../utils/provider/netease';

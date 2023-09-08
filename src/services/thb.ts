@@ -1,6 +1,6 @@
 import { DBSource } from '../config/dataSource';
-import { ThbAlbums } from '../entities/ThbAlbums';
-import { ThbSongs } from '../entities/ThbSongs';
+import { ThbAlbums } from '../entities/thb/ThbAlbums';
+import { ThbSongs } from '../entities/thb/ThbSongs';
 import * as THBAPI from '../utils/provider/thb';
 import * as RedisHelper from '../utils/redisHelper';
 import * as Tools from '../utils/tools';

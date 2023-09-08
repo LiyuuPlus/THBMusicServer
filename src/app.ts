@@ -25,6 +25,7 @@ DBSource.initialize().then(() => {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: true }));
+
   app.use('/', router);
 
   app.listen(port, () => {

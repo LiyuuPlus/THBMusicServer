@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { ThbAlbums } from '../entities/ThbAlbums';
-import { ThbSongs } from '../entities/ThbSongs';
+import { ThbAlbums } from '../entities/thb/ThbAlbums';
+import { ThbSongs } from '../entities/thb/ThbSongs';
 import { getAlbumInfoByAPI, getAlbumSongsByAPI } from '../services/thb';
 import { successResult, errorResult, notFoundResult } from "../utils/apiResult";
 import * as NCMServices from '../services/netease';

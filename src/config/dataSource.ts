@@ -1,10 +1,14 @@
 import { DataSource } from 'typeorm';
 import * as redis from 'redis';
-import { NeteaseThbsonglink } from '../entities/NeteaseThbsonglink';
-import { ThbAlbums } from '../entities/ThbAlbums';
-import { ThbSongs } from '../entities/ThbSongs';
-import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
-import { VThbSongs } from '../entities/VThbSongs';
+
+//thb
+import { ThbAlbums } from '../entities/thb/ThbAlbums';
+import { ThbSongs } from '../entities/thb/ThbSongs';
+import { VThbSongs } from '../entities/thb/VThbSongs';
+
+//netease
+import { NeteaseThbsonglink } from '../entities/netease/NeteaseThbsonglink';
+import { VNeteaseThbsonglink } from '../entities/netease/VNeteaseThbsonglink';
 
 const DB_HOST = process.env.DB_HOST || "";
 const DB_PORT = Number(process.env.DB_PORT) || 3306;
@@ -22,11 +26,11 @@ export const DBSource = new DataSource({
     synchronize: false,
     logging: false,
     entities: [
-        NeteaseThbsonglink,
         ThbAlbums,
         ThbSongs,
-        VNeteaseThbsonglink,
         VThbSongs,
+        NeteaseThbsonglink,
+        VNeteaseThbsonglink,
     ],
 });
 
