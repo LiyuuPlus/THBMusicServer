@@ -1,4 +1,6 @@
-import { API_STATUS } from "./define"
+import { API_STATUS } from "../utils/define"
+import { Response } from "express"
+
 type ApiResult = {
     code: number,
     msg: string | null,
@@ -38,40 +40,43 @@ const dateFormat = (dateStr: string | Date, formatter: string = 'yyyy-MM-dd') =>
 
 Date.prototype.toJSON = function () { return dateFormat(this, 'yyyy-MM-dd hh:mm:ss') };
 
-const successResult = (msg: string | null, data?: any | null) => {
-    let res: ApiResult = {
+const successResult = (response: Response, msg: string | null, data?: any | null) => {
+    let result: ApiResult = {
         code: API_STATUS.SUCCESS,
         msg: msg,
         data: data
     };
-    return res;
+    response.json(result);
 }
 
-const errorResult = (msg: string | null) => {
-    let res: ApiResult = {
+const errorResult = (response: Response, msg: string | null, data?: any | null) => {
+    let result: ApiResult = {
         code: API_STATUS.FAILED,
         msg: msg,
-        data: null
+        data: data
     };
-    return res;
+    response.status(500);
+    response.json(result);
 }
 
-const paramErrorResult = (msg: string | null) => {
-    let res: ApiResult = {
+const paramErrorResult = (response: Response, msg: string | null) => {
+    let result: ApiResult = {
         code: API_STATUS.PARAMERROR,
         msg: msg,
         data: null
     };
-    return res;
+    response.status(400);
+    response.json(result);
 }
 
-const notFoundResult = (msg: string | null) => {
-    let res: ApiResult = {
+const notFoundResult = (response: Response, msg: string | null) => {
+    let result: ApiResult = {
         code: API_STATUS.NOTFOUND,
         msg: msg,
         data: null
     };
-    return res;
+    response.status(404);
+    response.json(result);
 }
 
 export {

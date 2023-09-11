@@ -1,13 +1,17 @@
-import { DBSource } from '../../../config/dataSource';
 import { In } from 'typeorm';
-import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
-import { NeteaseThbsonglink } from '../entities/NeteaseThbsonglink';
-import { api_netease_link } from '../models/api_netease_link';
-import * as NCMAPI from '../provider/netease';
-import { getAlbumInfo, getAlbumSongs } from '../../thb/services/thb';
+import { groupBy, uniqBy } from 'lodash';
+
+import { DBSource } from '../../../config/dataSource';
 import * as RedisHelper from '../../../utils/redisHelper';
 import * as Tools from '../../../utils/tools';
-import { groupBy, uniqBy } from 'lodash';
+
+
+import * as NCMAPI from '../provider/netease';
+import * as THBAPI from '../../thb/services/thb';
+
+import { VNeteaseThbsonglink } from '../entities/VNeteaseThbsonglink';
+import { NeteaseThbsonglink } from '../entities/NeteaseThbsonglink';
+import { api_netease_link } from '../models/request/api_netease_link';
 
 /**
  * 搜索网易云的专辑信息
@@ -75,9 +79,9 @@ export const linkSongToTHB = async (songs: api_netease_link[]) => {
     for (var i = 0; i < keys.length; i++) {
         let key = keys[i];
         let items = groupSongs[key];
-        let album = await getAlbumInfo(key);
+        let album = await THBAPI.getAlbumInfo(key);
         if (album) {
-            let songList = await getAlbumSongs(key);
+            let songList = await THBAPI.getAlbumSongs(key);
             items.forEach(item => {
                 let song = songList.find(s => s.songIndex == item.songIndex);
                 if (song) {

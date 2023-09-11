@@ -1,4 +1,5 @@
 import got from "got";
+
 const NeteaseAPI = process.env.NCMAPI || "";
 
 /**

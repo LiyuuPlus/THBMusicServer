@@ -1,4 +1,5 @@
 import got from "got";
+
 const THBTrackAPI = 'https://thwiki.cc/rest/asktrack/v0';
 
 /**

@@ -1,9 +1,11 @@
 import { DBSource } from '../../../config/dataSource';
-import { ThbAlbums } from '../entities/ThbAlbums';
-import { ThbSongs } from '../entities/ThbSongs';
-import * as THBAPI from '../provider/thb';
 import * as RedisHelper from '../../../utils/redisHelper';
 import * as Tools from '../../../utils/tools';
+
+import * as THBAPI from '../provider/thb';
+
+import { ThbAlbums } from '../entities/ThbAlbums';
+import { ThbSongs } from '../entities/ThbSongs';
 
 /** API */
 

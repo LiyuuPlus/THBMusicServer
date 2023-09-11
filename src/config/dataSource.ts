@@ -1,5 +1,6 @@
 import { DataSource, EntitySchema, MixedList } from 'typeorm';
 import * as redis from 'redis';
+
 import { appPackages } from '../core'
 
 const DB_HOST = process.env.DB_HOST || "";

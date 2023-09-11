@@ -4,7 +4,8 @@ import "module-alias/register";
 import express from 'express';
 import bodyParser from 'body-parser';
 import { DBSource, RedisSource } from './config/dataSource'
-import router from './router/router';
+import router from './router';
+import { errorResult } from "./models/apiResult";
 
 RedisSource.connect();
 //监听Redis连接
@@ -13,8 +14,7 @@ RedisSource.on('connect', () => {
 });
 //监听Redis错误
 RedisSource.on('error', (err: any) => {
-  console.log("Redis发生错误：")
-  console.log(err)
+  console.error("Redis发生错误：", err)
 });
 
 //初始化数据库
@@ -28,10 +28,16 @@ DBSource.initialize().then(() => {
 
   app.use('/', router);
 
+  // 添加错误处理机制
+  const clientErrorHandler = (err: any, request: express.Request, response: express.Response, next: Function) => {
+    errorResult(response, "系统异常", err.stack);
+  }
+
+  app.use(clientErrorHandler)
+
   app.listen(port, () => {
     console.log(`程序启动，端口：${port}`);
   });
 }).catch((error) => {
-  console.log("数据库发生错误：")
-  console.log(error);
+  console.error("数据库发生错误：", error);
 })
