@@ -4,13 +4,13 @@ const THBTrackAPI = 'https://thwiki.cc/rest/asktrack/v0';
 
 /**
  * THB搜索专辑
- * @param albumName 专辑名关键字
+ * @param alsearchkey 专辑名关键字
  * @returns 
  */
-export const searchAlbum = async (albumName: string) => {
+export const searchAlbum = async (alsearchkey: string) => {
     const pData = {
         alname: null,
-        alsearchkey: [albumName],
+        alsearchkey: [alsearchkey],
         circle: null,
         circlename: null,
         date: null,
